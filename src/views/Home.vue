@@ -1,18 +1,28 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+  <div class="home" v-if="orders">
+    <div class="orders" v-for="(order, index) in orders" :key="index">
+      <div class="order">
+        <p>Orden #{{order.number}}</p>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
-
+import { getData, orders } from "@/composables/getData"
 export default {
   name: "Home",
-  components: {
-    HelloWorld,
-  },
+  setup(){
+    getData();
+    return { orders }
+  }
 };
 </script>
+<style scoped>
+.order{
+  border-radius: 10px;
+  padding: 10px;
+  background: rgb(201, 201, 201);
+  margin-bottom: 24px;
+}
+</style>
