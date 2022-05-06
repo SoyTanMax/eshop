@@ -1,0 +1,19 @@
+@import "~bulma/css/bulma.css";
+@import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
+
+body{
+    font-family: 'Nunito', sans-serif;
+}
+
+/* animations */
+
+@keyframes appearList{
+    0%{
+        transform: translateY(15px);
+        opacity: 0;
+    }
+    100%{
+        transform: translateY(0px);
+        opacity: 1;
+    }
+}

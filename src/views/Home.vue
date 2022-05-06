@@ -1,28 +1,21 @@
 <template>
-  <div class="home" v-if="orders">
-    <div class="orders" v-for="(order, index) in orders" :key="index">
-      <div class="order">
-        <p>Orden #{{order.number}}</p>
-      </div>
-    </div>
+  <div class="home">
+    <Navbar />
+    <Orders />
   </div>
 </template>
 
 <script>
-import { getData, orders } from "@/composables/getData"
+import Navbar from "@/components/Navbar.vue"
+import Orders from "@/components/Orders.vue"
 export default {
   name: "Home",
-  setup(){
-    getData();
-    return { orders }
-  }
+  components: {
+    Navbar,
+    Orders
+  },
 };
 </script>
 <style scoped>
-.order{
-  border-radius: 10px;
-  padding: 10px;
-  background: rgb(201, 201, 201);
-  margin-bottom: 24px;
-}
+
 </style>
