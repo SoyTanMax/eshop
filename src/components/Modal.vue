@@ -46,6 +46,7 @@
     height: 100px;
     background: #C0F5E2;
     border-radius: 50%;
+    animation: pop 0.5s ease-out;
 }
 svg{
     max-width: 50px;

@@ -97,6 +97,12 @@ a{
 a:hover{
     color: rgb(77, 77, 77);
 }
+.button{
+    transition: 500ms
+}
+.button:hover{
+    transform: scale(1.03);
+}
 /* mobile */
 @media screen and (max-width: 500px){
     .header{
