@@ -11,26 +11,35 @@
         <form @submit.prevent>
             <div class="block">
                 <label for="" class="label">Nombre del producto</label>
-                <input type="text" class="input" v-model="formData.name">
+                <input type="text" class="input" :class="{'is-danger': v$.name.$error}" v-model="state.name">
+                <p v-if="v$.name.$error" class="help is-danger">
+                    {{ v$.name.$errors[0].$message}}
+                </p>
             </div>
             <div class="block">
                 <label for="" class="label">SKU del producto</label>
-                <input type="text" class="input"  v-model="formData.sku">
+                <input type="text" class="input" :class="{'is-danger': v$.sku.$error}" v-model="state.sku"> 
+                <p v-if="v$.sku.$error" class="help is-danger">
+                    {{ v$.sku.$errors[0].$message}}
+                </p>
             </div>
             <div class="block">
                 <label for="" class="label">Precio</label>
-                <input type="text" class="input"  v-model="formData.price">
+                <input type="text" class="input" :class="{'is-danger': v$.price.$error}" v-model="state.price">
+                <p v-if="v$.price.$error" class="help is-danger">
+                    {{ v$.price.$errors[0].$message}}
+                </p>
             </div>
             <div class="block">
                 <label for="" class="label">Cantidad</label>
                 <div class="counter is-flex">
                     <button class="button has-text-weight-bold" @click="()=>{
-                        if(formData.quantity > 1){
-                            formData.quantity--
+                        if(state.quantity > 1){
+                            state.quantity--
                         }
                     }">-</button>
-                    <p class="quantity has-text-weight-bold">{{ formData.quantity }}</p>
-                    <button class="button has-text-weight-bold" @click="formData.quantity++">+</button>
+                    <p class="quantity has-text-weight-bold">{{ state.quantity }}</p>
+                    <button class="button has-text-weight-bold" @click="state.quantity++">+</button>
                 </div>
             </div>
             <button class="button add" @click="add">
@@ -41,9 +50,12 @@
 </template>
 
 <script>
-import { ref } from '@vue/reactivity'
+import useVuelidate from "@vuelidate/core"
+import { required } from "@vuelidate/validators"
+import { reactive, ref } from '@vue/reactivity'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
+import { computed } from '@vue/runtime-core'
 export default {
     setup(props, context){
         const store = useStore();
@@ -51,24 +63,37 @@ export default {
         const back = () => {
             context.emit('back')
         }
-        const formData = ref({
+        const state = reactive({
             name: "",
             sku: "",
             price: "",
             quantity: 1
         })
+        const rules = {
+            name: { required },
+            sku: { required },
+            price: { required }
+        }
+        const v$ = useVuelidate(rules, state)
 
-        const add = () => {
-            console.log(formData.value)
-            store.state.orders.map(order => {
-                if(order.id === route.params.id){
-                    order.items.push(formData.value)
-                }
-            })
-            context.emit('back')
+        const add = async () => {
+            await v$.value.$validate()
+            
+             if(!v$.value.$error){
+                store.state.orders.map(order => {
+                     if(order.id === route.params.id){
+                         order.items.push(state)
+                     }
+                })
+                context.emit('back')
+             }else{
+                return
+             }
         }
 
-        return { back, formData, add }
+
+
+        return { back, state, add, v$ }
     }
 }
 </script>
